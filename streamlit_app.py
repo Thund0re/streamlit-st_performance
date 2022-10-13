@@ -20,8 +20,6 @@ from matplotlib.backends.backend_agg import RendererAgg
 
 
 
-
-
 st.set_page_config(
 
     page_title="Real-Time Data Science Dashboard",
@@ -51,6 +49,10 @@ df = get_data()
 
 
 # dashboard title
+
+url = "https://signalstrader.com/portfolio-item"
+st.write("Back to SignalsTrader[link](%s)" % url)
+
 
 st.title("Real-Time / Past Performance Signals Dashboard")
 
