@@ -19,6 +19,9 @@ import os
 from matplotlib.backends.backend_agg import RendererAgg
 
 
+
+
+
 st.set_page_config(
 
     page_title="Real-Time Data Science Dashboard",
@@ -30,6 +33,9 @@ st.set_page_config(
 )
 
 
+
+
+
 #Loading the data
 
 @st.cache
@@ -39,12 +45,16 @@ def get_data():
      return pd.read_csv(os.path.join(os.getcwd(),'st_tradesignals_withclose.csv'))
 
 
+
 df = get_data()
+
 
 
 # dashboard title
 
 st.title("Real-Time / Past Performance Signals Dashboard")
+
+
 
 currency = st.multiselect(
 
@@ -55,6 +65,7 @@ currency = st.multiselect(
     default=df["Currency"].unique()
 
 )
+
 
 
 trade_type = st.multiselect(
@@ -68,6 +79,19 @@ trade_type = st.multiselect(
 )
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 ####################  Filters  ###########################
 
 df_selection = df.query(
@@ -77,7 +101,13 @@ df_selection = df.query(
 )
 
 
+
 total_pips = float(df_selection["Pips"].sum())
+
+
+
+
+
 
 
 pips_by_currency = (
@@ -85,6 +115,11 @@ pips_by_currency = (
     df_selection.groupby(by=["Currency"]).sum()[["Pips"]].sort_values(by="Currency")
 
 )
+
+
+
+
+
 
 
 ####################  Currency Bar Graph  ###########################
@@ -105,6 +140,8 @@ fig_total_pips = px.bar(
 
     template="plotly_white",
 
+
+
 )
 
 
@@ -118,6 +155,10 @@ fig_total_pips.update_layout(
     autosize=True
 
 )
+
+
+
+
 
 
 
@@ -136,6 +177,7 @@ fig_total_pips_pie = px.pie(
     title = "Percentage Wise Pips Split in Pie",
 
 
+
 )
 
 
@@ -152,6 +194,16 @@ fig_total_pips_pie.update_layout(
 
 
 
+
+
+
+
+
+
+
+
+
+
 ####################  YoY  ###########################
 
 
@@ -159,7 +211,15 @@ fig_total_pips_pie.update_layout(
 yoy = pd.read_csv(os.path.join(os.getcwd(),'YoY.csv'))
 
 
+
+
+
 fig = px.bar(yoy, x="Year", y="Pips", title="Wide-Form Input")
+
+
+
+
+
 
 
 fig_yoy_pips = px.bar(
@@ -193,7 +253,13 @@ fig_yoy_pips.update_layout(
 )
 
 
+
+
+
+
+
 #st.plotly_chart(fig_yoy_pips)
+
 
 
 ####################  Monthly Pips Line  ###########################
@@ -237,7 +303,52 @@ fig_monthly_pips.update_layout(
 )
 
 
+
+
+####################  Total Pips Line  ###########################
+
+totalpips = pd.read_csv(os.path.join(os.getcwd(),'TotalP.csv'))
+
+
+
+df1 = totalpips
+
+
+
+fig_totalpips_pips_line = px.line(
+
+    totalpips,
+
+    y="Tpips",
+
+    x="MnY",
+
+    orientation = "h",
+
+    title = "Total Pips",
+
+    color_discrete_sequence=["#0086DC"] ,
+
+    template="plotly_white"
+
+)
+
+
+
+fig_totalpips_pips_line.update_layout(
+
+    plot_bgcolor="rgba(0,0,0,0)",
+
+    xaxis=(dict(showgrid=False)),
+
+    autosize=True
+
+)
+
+
 #st.plotly_chart(fig_monthly_pips)
+
+
 
 #fig = px.line(df1, x='MnY', y="Mpips", title="Monthly")
 
@@ -262,7 +373,17 @@ with col3:
     st.plotly_chart(fig_monthly_pips)
 
 
-st.plotly_chart(fig)
+
+col4, col5 = st.columns(2)
+
+with col4:
+
+    st.plotly_chart(fig_totalpips_pips_line)
+
+with col5:
+
+    st.plotly_chart(fig)
+
 
 
 #st.dataframe(pips_by_currency)
