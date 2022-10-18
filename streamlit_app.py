@@ -20,8 +20,6 @@ from matplotlib.backends.backend_agg import RendererAgg
 
 
 
-
-
 st.set_page_config(
 
     page_title="Real-Time Data Science Dashboard",
@@ -42,15 +40,19 @@ st.set_page_config(
 
 def get_data():
 
-     return pd.read_csv(os.path.join(os.getcwd(),'st_tradesignals_withclose.csv'))
+     return pd.read_csv(os.path.join(os.getcwd(),'st_tradesignals.csv'))
 
 
 
 df = get_data()
 
-
+df.head()
 
 # dashboard title
+
+url = "https://signalstrader.com/portfolio-item"
+st.write("[Back to SignalsTrader](%s)" % url)
+
 
 st.title("Real-Time / Past Performance Signals Dashboard")
 
@@ -77,12 +79,6 @@ trade_type = st.multiselect(
     default=df["TradeType"].unique()
 
 )
-
-
-
-
-
-
 
 
 
@@ -197,6 +193,41 @@ fig_total_pips_pie.update_layout(
 
 
 
+####################  Monthly Pips Line  ###########################
+
+
+
+fig_monthly_pips = px.line(
+
+    df,
+
+    y="Mpips",
+
+    x="MnY",
+
+    orientation = "h",
+
+    title = "Monthly Pips",
+
+    color_discrete_sequence=["#0086DC"] ,
+
+    template="plotly_white"
+
+)
+
+
+
+fig_monthly_pips.update_layout(
+
+    plot_bgcolor="rgba(0,0,0,0)",
+
+    xaxis=(dict(showgrid=False)),
+
+    autosize=True
+
+)
+
+
 
 
 
@@ -214,7 +245,7 @@ yoy = pd.read_csv(os.path.join(os.getcwd(),'YoY.csv'))
 
 
 
-fig = px.bar(yoy, x="Year", y="Pips", title="Wide-Form Input")
+fig = px.bar(yoy, x="Year", y="Pips", title="Yearly Pips")
 
 
 
@@ -260,47 +291,6 @@ fig_yoy_pips.update_layout(
 
 #st.plotly_chart(fig_yoy_pips)
 
-
-
-####################  Monthly Pips Line  ###########################
-
-monthlypips = pd.read_csv(os.path.join(os.getcwd(),'MonthlyP.csv'))
-
-
-
-df1 = monthlypips
-
-
-
-fig_monthly_pips = px.line(
-
-    monthlypips,
-
-    y="Mpips",
-
-    x="MnY",
-
-    orientation = "h",
-
-    title = "Monthly Pips",
-
-    color_discrete_sequence=["#0086DC"] ,
-
-    template="plotly_white"
-
-)
-
-
-
-fig_monthly_pips.update_layout(
-
-    plot_bgcolor="rgba(0,0,0,0)",
-
-    xaxis=(dict(showgrid=False)),
-
-    autosize=True
-
-)
 
 
 
@@ -350,13 +340,10 @@ fig_totalpips_pips_line.update_layout(
 
 
 
-#fig = px.line(df1, x='MnY', y="Mpips", title="Monthly")
-
-#fig.show()
 
 
 
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 
 
 
@@ -368,22 +355,23 @@ with col2:
 
     st.plotly_chart(fig_total_pips_pie)
 
+
+
+
+col3, col4, col5 = st.columns(3)
+
 with col3:
-
+    #st.plotly_chart(fig_total_pips_pie)
     st.plotly_chart(fig_monthly_pips)
-
-
-
-col4, col5 = st.columns(2)
 
 with col4:
 
-    st.plotly_chart(fig_totalpips_pips_line)
+    st.plotly_chart(fig)
+
 
 with col5:
 
-    st.plotly_chart(fig)
-
+    st.plotly_chart(fig_totalpips_pips_line)
 
 
 #st.dataframe(pips_by_currency)
