@@ -1,23 +1,10 @@
 import streamlit as st 
 
-import numpy as np
-
 import pandas as pd
-
-import altair as alt
 
 import plotly.express as px  # interactive charts
 
-import matplotlib
-
-import matplotlib.pyplot as plt
-
-import seaborn as sns
-
 import os
-
-from matplotlib.backends.backend_agg import RendererAgg
-
 
 
 st.set_page_config(
@@ -29,8 +16,6 @@ st.set_page_config(
     layout="wide",
 
 )
-
-
 
 
 
@@ -51,8 +36,8 @@ df.head()
 # dashboard title
 
 url = "https://signalstrader.com/portfolio-item"
-st.write("[Back to SignalsTrader](%s)" % url)
 
+st.write("[Back to SignalsTrader](%s)" % url)
 
 st.title("Real-Time / Past Performance Signals Dashboard")
 
@@ -83,11 +68,6 @@ trade_type = st.multiselect(
 
 
 
-
-
-
-
-
 ####################  Filters  ###########################
 
 df_selection = df.query(
@@ -98,22 +78,11 @@ df_selection = df.query(
 
 
 
-total_pips = float(df_selection["Pips"].sum())
-
-
-
-
-
-
-
 pips_by_currency = (
 
     df_selection.groupby(by=["Currency"]).sum()[["Pips"]].sort_values(by="Currency")
 
 )
-
-
-
 
 
 
@@ -136,8 +105,6 @@ fig_total_pips = px.bar(
 
     template="plotly_white",
 
-
-
 )
 
 
@@ -151,8 +118,6 @@ fig_total_pips.update_layout(
     autosize=True
 
 )
-
-
 
 
 
@@ -195,7 +160,11 @@ fig_total_pips_pie.update_layout(
 
 ####################  Monthly Pips Line  ###########################
 
+#df_month = df.query(
 
+    #'Mpips == @mpips & MnY == @mny  & TradeType == @trade_type'
+
+#)
 
 fig_monthly_pips = px.line(
 
@@ -230,36 +199,24 @@ fig_monthly_pips.update_layout(
 
 
 
-
-
-
-
-
 ####################  YoY  ###########################
 
 
 
-yoy = pd.read_csv(os.path.join(os.getcwd(),'YoY.csv'))
+#yoy = pd.read_csv(os.path.join(os.getcwd(),'YoY.csv', usecols = ['YYear','PPips']))
 
+yoy = df[["YYear","YPips"]]
 
-
-
-
-fig = px.bar(yoy, x="Year", y="Pips", title="Yearly Pips")
-
-
-
-
-
+fig = px.bar(yoy, x="YYear", y="YPips", title="Yearly Pips")
 
 
 fig_yoy_pips = px.bar(
 
     yoy,
 
-    y="Pips",
+    y="YPips",
 
-    x="Year",
+    x="YYear",
 
     orientation = "h",
 
@@ -286,23 +243,9 @@ fig_yoy_pips.update_layout(
 
 
 
-
-
-
-#st.plotly_chart(fig_yoy_pips)
-
-
-
-
-
 ####################  Total Pips Line  ###########################
 
 totalpips = pd.read_csv(os.path.join(os.getcwd(),'TotalP.csv'))
-
-
-
-df1 = totalpips
-
 
 
 fig_totalpips_pips_line = px.line(
@@ -336,16 +279,9 @@ fig_totalpips_pips_line.update_layout(
 )
 
 
-#st.plotly_chart(fig_monthly_pips)
-
-
-
-
-
+##################### Display Charts ##########################
 
 col1, col2 = st.columns(2)
-
-
 
 with col1:
 
@@ -354,7 +290,6 @@ with col1:
 with col2:
 
     st.plotly_chart(fig_total_pips_pie)
-
 
 
 
@@ -373,6 +308,8 @@ with col5:
 
     st.plotly_chart(fig_totalpips_pips_line)
 
+
+##################### Show Dataframe Actual Data Read from CSV ##########################
 
 #st.dataframe(pips_by_currency)
 
