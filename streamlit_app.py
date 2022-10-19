@@ -1,23 +1,10 @@
 import streamlit as st 
 
-import numpy as np
-
 import pandas as pd
-
-import altair as alt
 
 import plotly.express as px  # interactive charts
 
-import matplotlib
-
-import matplotlib.pyplot as plt
-
-import seaborn as sns
-
 import os
-
-from matplotlib.backends.backend_agg import RendererAgg
-
 
 
 st.set_page_config(
@@ -29,8 +16,6 @@ st.set_page_config(
     layout="wide",
 
 )
-
-
 
 
 
@@ -51,8 +36,8 @@ df.head()
 # dashboard title
 
 url = "https://signalstrader.com/portfolio-item"
-st.write("[Back to SignalsTrader](%s)" % url)
 
+st.write("[Back to SignalsTrader](%s)" % url)
 
 st.title("Real-Time / Past Performance Signals Dashboard")
 
@@ -83,11 +68,6 @@ trade_type = st.multiselect(
 
 
 
-
-
-
-
-
 ####################  Filters  ###########################
 
 df_selection = df.query(
@@ -98,22 +78,11 @@ df_selection = df.query(
 
 
 
-total_pips = float(df_selection["Pips"].sum())
-
-
-
-
-
-
-
 pips_by_currency = (
 
     df_selection.groupby(by=["Currency"]).sum()[["Pips"]].sort_values(by="Currency")
 
 )
-
-
-
 
 
 
@@ -136,8 +105,6 @@ fig_total_pips = px.bar(
 
     template="plotly_white",
 
-
-
 )
 
 
@@ -151,8 +118,6 @@ fig_total_pips.update_layout(
     autosize=True
 
 )
-
-
 
 
 
@@ -193,93 +158,11 @@ fig_total_pips_pie.update_layout(
 
 
 
-
-
-
-
-
-
-
-####################  YoY  ###########################
-
-
-
-yoy = pd.read_csv(os.path.join(os.getcwd(),'YoY.csv'))
-
-
-
-
-
-fig = px.bar(yoy, x="Year", y="Pips", title="Yearly Pips")
-
-
-
-
-
-
-
-fig_yoy_pips = px.bar(
-
-    yoy,
-
-    y="Pips",
-
-    x="Year",
-
-    orientation = "h",
-
-    title = "Yearly Pips",
-
-    color_discrete_sequence=["#ff4b4b"] ,
-
-    template="plotly_white"
-
-)
-
-
-
-fig_yoy_pips.update_layout(
-
-    plot_bgcolor="rgba(0,0,0,0)",
-
-    xaxis=(dict(showgrid=False)),
-
-    autosize=False
-
-)
-
-
-
-
-
-
-
-#st.plotly_chart(fig_yoy_pips)
-
-
-
 ####################  Monthly Pips Line  ###########################
 
 
 
-fig_monthly_pips = px.line(
-
-    df,
-
-    y="Mpips",
-
-    x="MnY",
-
-    orientation = "h",
-
-    title = "Monthly Pips",
-
-    color_discrete_sequence=["#0086DC"] ,
-
-    template="plotly_white"
-
-)
-
+fig_monthly_pips = px.scatter(x=df.loc[:,"MnY"], y=df.loc[:,"Mpips"], title="Monthly Pips")
 
 
 fig_monthly_pips.update_layout(
@@ -295,34 +178,53 @@ fig_monthly_pips.update_layout(
 
 
 
-####################  Total Pips Line  ###########################
-
-totalpips = pd.read_csv(os.path.join(os.getcwd(),'TotalP.csv'))
+####################  YoY  ###########################
 
 
+yoy = df[["YYear","YPips"]]
 
-df1 = totalpips
+fig_yoy = px.bar(yoy, x="YYear", y="YPips", title="Yearly Pips (YoY)")
 
 
+fig_yoy_pips = px.bar(
 
-fig_totalpips_pips_line = px.line(
+    yoy,
 
-    totalpips,
+    y="YPips",
 
-    y="Tpips",
-
-    x="MnY",
+    x="YYear",
 
     orientation = "h",
 
-    title = "Total Pips",
+    title = "Yearly Pips",
 
-    color_discrete_sequence=["#0086DC"] ,
+    color_discrete_sequence=["#ff4b4b"] ,
 
     template="plotly_white"
 
 )
 
+
+fig_yoy_pips = px.scatter(x=df.loc[:,"MnY"], y=df.loc[:,"Mpips"])
+
+fig_yoy_pips.update_layout(
+
+    plot_bgcolor="rgba(0,0,0,0)",
+
+    xaxis=(dict(showgrid=False)),
+
+    autosize=False
+
+)
+
+
+
+
+####################  Total Pips Line  ###########################
+
+
+
+fig_totalpips_pips_line = px.line(df, x="MnY", y="Tpips", title='Total Pips (MoM)')
 
 
 fig_totalpips_pips_line.update_layout(
@@ -336,16 +238,9 @@ fig_totalpips_pips_line.update_layout(
 )
 
 
-#st.plotly_chart(fig_monthly_pips)
-
-
-
-
-
+##################### Display Charts ##########################
 
 col1, col2 = st.columns(2)
-
-
 
 with col1:
 
@@ -357,22 +252,22 @@ with col2:
 
 
 
-
 col3, col4, col5 = st.columns(3)
 
 with col3:
-    #st.plotly_chart(fig_total_pips_pie)
     st.plotly_chart(fig_monthly_pips)
 
 with col4:
 
-    st.plotly_chart(fig)
+    st.plotly_chart(fig_yoy)
 
 
 with col5:
 
     st.plotly_chart(fig_totalpips_pips_line)
 
+
+##################### Show Dataframe Actual Data Read from CSV ##########################
 
 #st.dataframe(pips_by_currency)
 
