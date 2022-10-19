@@ -160,30 +160,9 @@ fig_total_pips_pie.update_layout(
 
 ####################  Monthly Pips Line  ###########################
 
-#df_month = df.query(
 
-    #'Mpips == @mpips & MnY == @mny  & TradeType == @trade_type'
 
-#)
-
-fig_monthly_pips = px.line(
-
-    df,
-
-    y="Mpips",
-
-    x="MnY",
-
-    orientation = "h",
-
-    title = "Monthly Pips",
-
-    color_discrete_sequence=["#0086DC"] ,
-
-    template="plotly_white"
-
-)
-
+fig_monthly_pips = px.scatter(x=df.loc[:,"MnY"], y=df.loc[:,"Mpips"], title="Monthly Pips")
 
 
 fig_monthly_pips.update_layout(
@@ -202,12 +181,9 @@ fig_monthly_pips.update_layout(
 ####################  YoY  ###########################
 
 
-
-#yoy = pd.read_csv(os.path.join(os.getcwd(),'YoY.csv', usecols = ['YYear','PPips']))
-
 yoy = df[["YYear","YPips"]]
 
-fig = px.bar(yoy, x="YYear", y="YPips", title="Yearly Pips")
+fig_yoy = px.bar(yoy, x="YYear", y="YPips", title="Yearly Pips (YoY)")
 
 
 fig_yoy_pips = px.bar(
@@ -229,6 +205,7 @@ fig_yoy_pips = px.bar(
 )
 
 
+fig_yoy_pips = px.scatter(x=df.loc[:,"MnY"], y=df.loc[:,"Mpips"])
 
 fig_yoy_pips.update_layout(
 
@@ -245,27 +222,9 @@ fig_yoy_pips.update_layout(
 
 ####################  Total Pips Line  ###########################
 
-totalpips = pd.read_csv(os.path.join(os.getcwd(),'TotalP.csv'))
 
 
-fig_totalpips_pips_line = px.line(
-
-    totalpips,
-
-    y="Tpips",
-
-    x="MnY",
-
-    orientation = "h",
-
-    title = "Total Pips",
-
-    color_discrete_sequence=["#0086DC"] ,
-
-    template="plotly_white"
-
-)
-
+fig_totalpips_pips_line = px.line(df, x="MnY", y="Tpips", title='Total Pips (MoM)')
 
 
 fig_totalpips_pips_line.update_layout(
@@ -296,12 +255,11 @@ with col2:
 col3, col4, col5 = st.columns(3)
 
 with col3:
-    #st.plotly_chart(fig_total_pips_pie)
     st.plotly_chart(fig_monthly_pips)
 
 with col4:
 
-    st.plotly_chart(fig)
+    st.plotly_chart(fig_yoy)
 
 
 with col5:
