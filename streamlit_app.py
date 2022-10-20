@@ -24,46 +24,40 @@ st.set_page_config(
 @st.cache
 
 def get_data():
-
      return pd.read_csv(os.path.join(os.getcwd(),'st_tradesignals.csv'))
-
 
 
 df = get_data()
 
-df.head()
 
-# dashboard title
-
+# Back to website link from streamlit app
 url = "https://signalstrader.com/portfolio-item"
-
 st.write("[Back to SignalsTrader](%s)" % url)
 
+# dashboard title
 st.title("Real-Time / Past Performance Signals Dashboard")
 
+#Added sidebar
+with st.sidebar:
+    currency = st.multiselect(
 
+        "Select Currency:",
 
-currency = st.multiselect(
+        options=df["Currency"].unique(),
 
-    "Select Currency:",
+        default=df["Currency"].unique()
 
-    options=df["Currency"].unique(),
+    )
 
-    default=df["Currency"].unique()
+    trade_type = st.multiselect(
 
-)
+        "Select Type:",
 
+        options=df["TradeType"].unique(),
 
+        default=df["TradeType"].unique()
 
-trade_type = st.multiselect(
-
-    "Select Type:",
-
-    options=df["TradeType"].unique(),
-
-    default=df["TradeType"].unique()
-
-)
+    )
 
 
 
@@ -75,7 +69,6 @@ df_selection = df.query(
     'Currency == @currency & TradeType == @trade_type'
 
 )
-
 
 
 pips_by_currency = (
@@ -178,7 +171,7 @@ fig_monthly_pips.update_layout(
 
 
 
-####################  YoY  ###########################
+####################  YoY Bar ###########################
 
 
 yoy = df[["YYear","YPips"]]
@@ -204,8 +197,6 @@ fig_yoy_pips = px.bar(
 
 )
 
-
-fig_yoy_pips = px.scatter(x=df.loc[:,"MnY"], y=df.loc[:,"Mpips"])
 
 fig_yoy_pips.update_layout(
 
