@@ -142,7 +142,9 @@ fig_total_pips_pie.update_layout(
 
     xaxis=(dict(showgrid=False)),
 
-    autosize=True
+    autosize=True,
+
+
 
 )
 
@@ -165,6 +167,8 @@ fig_monthly_pips.update_layout(
     xaxis=(dict(showgrid=False)),
 
     autosize=True
+
+
 
 )
 
@@ -204,7 +208,8 @@ fig_yoy_pips.update_layout(
 
     xaxis=(dict(showgrid=False)),
 
-    autosize=False
+    autosize=True
+
 
 )
 
@@ -224,7 +229,8 @@ fig_totalpips_pips_line.update_layout(
 
     xaxis=(dict(showgrid=False)),
 
-    autosize=True
+    autosize=True,
+
 
 )
 
@@ -235,27 +241,27 @@ col1, col2 = st.columns(2)
 
 with col1:
 
-    st.plotly_chart(fig_total_pips)
+    st.plotly_chart(fig_total_pips, use_container_width=True)
 
 with col2:
 
-    st.plotly_chart(fig_total_pips_pie)
+    st.plotly_chart(fig_total_pips_pie, use_container_width=True)
 
 
 
 col3, col4, col5 = st.columns(3)
 
 with col3:
-    st.plotly_chart(fig_monthly_pips)
+    st.plotly_chart(fig_monthly_pips, use_container_width=True)
 
 with col4:
 
-    st.plotly_chart(fig_yoy)
+    st.plotly_chart(fig_yoy, use_container_width=True)
 
 
 with col5:
 
-    st.plotly_chart(fig_totalpips_pips_line)
+    st.plotly_chart(fig_totalpips_pips_line, use_container_width=True)
 
 
 ##################### Show Dataframe Actual Data Read from CSV ##########################
