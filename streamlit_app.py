@@ -19,7 +19,7 @@ st.set_page_config(
 
 
 
-#Loading the data
+#Loading the data from CSV file
 
 @st.cache
 
@@ -37,7 +37,7 @@ st.write("[Back to SignalsTrader](%s)" % url)
 # dashboard title
 st.title("Real-Time / Past Performance Signals Dashboard")
 
-#Added sidebar
+#Added sidebar to app
 with st.sidebar:
     currency = st.multiselect(
 
@@ -79,7 +79,7 @@ pips_by_currency = (
 
 
 
-
+# All graphs updating using plotly library
 ####################  Currency Bar Graph  ###########################
 
 fig_total_pips = px.bar(
