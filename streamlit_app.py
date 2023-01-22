@@ -8,27 +8,18 @@ import os
 
 
 st.set_page_config(
-
     page_title="Real-Time Data Science Dashboard",
-
     page_icon="📊",
-
     layout="wide",
-
 )
 
-
-
 #Loading the data from CSV file
-
 @st.cache
 
 def get_data():
      return pd.read_csv(os.path.join(os.getcwd(),'st_tradesignals.csv'))
 
-
 df = get_data()
-
 
 # Back to website link from streamlit app
 url = "https://signalstrader.com/portfolio-item"
@@ -40,76 +31,47 @@ st.title("Real-Time / Past Performance Signals Dashboard")
 #Added sidebar to app
 with st.sidebar:
     currency = st.multiselect(
-
         "Select Currency:",
-
         options=df["Currency"].unique(),
-
         default=df["Currency"].unique()
-
     )
 
     trade_type = st.multiselect(
-
         "Select Type:",
-
         options=df["TradeType"].unique(),
-
         default=df["TradeType"].unique()
-
     )
-
-
 
 
 ####################  Filters  ###########################
 
 df_selection = df.query(
-
     'Currency == @currency & TradeType == @trade_type'
-
 )
-
 
 pips_by_currency = (
-
     df_selection.groupby(by=["Currency"]).sum()[["Pips"]].sort_values(by="Currency")
-
 )
-
-
 
 # All graphs updating using plotly library
 ####################  Currency Bar Graph  ###########################
 
 fig_total_pips = px.bar(
-
     pips_by_currency,
-
     y="Pips",
-
     x=pips_by_currency.index,
-
     orientation = "v",
-
     title = "Currency Wise Pips Split",
-
     color_discrete_sequence=["#ff4b4b"] ,
-
     template="plotly_white",
-
 )
 
 
 
 fig_total_pips.update_layout(
-
     plot_bgcolor="rgba(0,0,0,0)",
-
     xaxis=(dict(showgrid=False)),
-
     autosize=True
-
 )
 
 
@@ -119,57 +81,28 @@ fig_total_pips.update_layout(
 ####################  Pie Graph  ###########################
 
 fig_total_pips_pie = px.pie(
-
     pips_by_currency,
-
     values="Pips",
-
     names = pips_by_currency.index,
-
     template="plotly_white",
-
     title = "Percentage Wise Pips Split in Pie",
-
-
-
 )
-
-
 
 fig_total_pips_pie.update_layout(
-
     plot_bgcolor="rgba(0,0,0,0)",
-
     xaxis=(dict(showgrid=False)),
-
     autosize=True,
-
-
-
 )
-
-
-
-
 
 
 ####################  Monthly Pips Line  ###########################
 
-
-
 fig_monthly_pips = px.scatter(x=df.loc[:,"MnY"], y=df.loc[:,"Mpips"], title="Monthly Pips")
 
-
 fig_monthly_pips.update_layout(
-
     plot_bgcolor="rgba(0,0,0,0)",
-
     xaxis=(dict(showgrid=False)),
-
     autosize=True
-
-
-
 )
 
 
@@ -177,40 +110,24 @@ fig_monthly_pips.update_layout(
 
 ####################  YoY Bar ###########################
 
-
 yoy = df[["YYear","YPips"]]
-
 fig_yoy = px.bar(yoy, x="YYear", y="YPips", title="Yearly Pips (YoY)")
 
-
 fig_yoy_pips = px.bar(
-
     yoy,
-
     y="YPips",
-
     x="YYear",
-
     orientation = "h",
-
     title = "Yearly Pips",
-
     color_discrete_sequence=["#ff4b4b"] ,
-
     template="plotly_white"
-
 )
 
 
 fig_yoy_pips.update_layout(
-
     plot_bgcolor="rgba(0,0,0,0)",
-
     xaxis=(dict(showgrid=False)),
-
     autosize=True
-
-
 )
 
 
@@ -218,33 +135,23 @@ fig_yoy_pips.update_layout(
 
 ####################  Total Pips Line  ###########################
 
-
-
 fig_totalpips_pips_line = px.line(df, x="MnY", y="Tpips", title='Total Pips (MoM)')
 
-
 fig_totalpips_pips_line.update_layout(
-
     plot_bgcolor="rgba(0,0,0,0)",
-
     xaxis=(dict(showgrid=False)),
-
     autosize=True,
-
-
 )
 
 
-##################### Display Charts ##########################
+##################### Display Charts in resizable columns ##########################
 
 col1, col2 = st.columns(2)
 
 with col1:
-
     st.plotly_chart(fig_total_pips, use_container_width=True)
 
 with col2:
-
     st.plotly_chart(fig_total_pips_pie, use_container_width=True)
 
 
@@ -255,12 +162,10 @@ with col3:
     st.plotly_chart(fig_monthly_pips, use_container_width=True)
 
 with col4:
-
     st.plotly_chart(fig_yoy, use_container_width=True)
 
 
 with col5:
-
     st.plotly_chart(fig_totalpips_pips_line, use_container_width=True)
 
 
