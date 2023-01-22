@@ -106,8 +106,6 @@ fig_monthly_pips.update_layout(
 )
 
 
-
-
 ####################  YoY Bar ###########################
 
 yoy = df[["YYear","YPips"]]
@@ -129,8 +127,6 @@ fig_yoy_pips.update_layout(
     xaxis=(dict(showgrid=False)),
     autosize=True
 )
-
-
 
 
 ####################  Total Pips Line  ###########################
