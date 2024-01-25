@@ -22,7 +22,7 @@ def get_data():
 df = get_data()
 
 # Back to website link from streamlit app
-url = "https://signalstrader.com/portfolio-item"
+url = "https://signalstrader.com"
 st.write("[Back to SignalsTrader](%s)" % url)
 
 # dashboard title
